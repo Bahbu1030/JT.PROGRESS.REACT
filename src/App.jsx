@@ -1,33 +1,44 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState } from 'react';
 import './App.css'
+import Header from './components/Header';
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const [ubicacionPrincipal, setUbicacionPrincipal] = useState(0);
+  setUbicacionPrincipal(window.pageYOffset);
+  AOS.init();
+
+  window.addEventListener("scroll", function () {
+    const desplazamientoActual = window.pageYOffset; //180
+    if (ubicacionPrincipal >= desplazamientoActual) { // 200 > 180
+      document.getElementsByTagName("nav")[0].style.top = "0px"
+    } else {
+      document.getElementsByTagName("nav")[0].style.top = "-100px"
+    }
+    setUbicacionPrincipal(desplazamientoActual); //200
+  })
+
+  // Menu
+
+  const enlacesHeader = document.querySelectorAll(".enlaces-header")[0];
+  const [semaforo, setSemaforo] = useState(true);
+
+  document.querySelectorAll(".hamburguer")[0].addEventListener("click", function () {
+    if (semaforo) {
+      document.querySelectorAll(".hamburguer")[0].style.color = "#fff";
+      setSemaforo(false);
+    } else {
+      document.querySelectorAll(".hamburguer")[0].style.color = "#000";
+      setSemaforo(true);
+    }
+    enlacesHeader.classList.toggle("menudos")
+  })
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <section>
+        <Header/>
+      </section>
     </>
   )
 }
